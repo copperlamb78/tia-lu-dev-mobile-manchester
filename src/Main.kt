@@ -8,6 +8,9 @@
 */
 
 fun main() {
+    var codigoProduto = 0
+    var produtos = mutableListOf<Any>()
+
     while(true) {
         println("[1] Cadastrar Item: ")
         println("[2] Atualizar Item: ")
@@ -18,9 +21,22 @@ fun main() {
 
         var entrada = readln().toInt()
 
+
         when (entrada) {
             1 -> {
-                println("Cadastrar Item")
+                print("Qual nome do produto: ")
+                var nome = readln()
+                print("Descrição do produto: ")
+                var descricao = readln()
+                print("Qual o preço do produto: ")
+                var preco = readln().toDouble()
+                print("Quantos há em estoque: ")
+                var quantidade = readln().toInt()
+                codigoProduto += 1
+                println("Esse é o código do produto: $codigoProduto")
+                var produto = mutableListOf(nome, descricao, preco, quantidade, codigoProduto)
+                produtos.add(produto)
+                println(produtos)
             }
             2 -> {
                 println("Atualizar Item")
