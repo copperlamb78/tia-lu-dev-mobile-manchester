@@ -12,14 +12,15 @@ fun main() {
     var produtos = mutableListOf<MutableList<Any>>()
 
     while(true) {
+        println(produtos)
         println("[1] Cadastrar Item: ")
         println("[2] Atualizar Item: ")
         println("[3] Criar Pedido: ")
         println("[4] Atualizar Pedido: ")
         println("[5] Consultar Pedidos: ")
         print("Qual opção deseja escolher: ")
-
         var entrada = readln().toInt()
+
 
 
         when (entrada) {
@@ -34,18 +35,35 @@ fun main() {
                 var quantidade = readln().toInt()
                 codigoProduto += 1
                 println("Esse é o código do produto: $codigoProduto")
-                var produto: MutableList<Any> = mutableListOf(nome, descricao, preco, quantidade, codigoProduto) // Professor, eu (Antonio) Fiz isso com ajuda da IDE, não foi IA, ok?
+                var produto: MutableList<Any> = mutableListOf(nome, descricao, preco, quantidade, codigoProduto)
                 produtos.add(produto)
-                println(produtos)
             }
             2 -> {
                 if (produtos.size != 0) {
                     println("Qual produto você deseja atualizar?")
                     var i = 1
                     for (item in produtos) {
-                        println("$i -" + item[1])
+                        println("[$i] -" + item[0])
                         i += 1
                     }
+                    val userIndexProduto = readln().toInt() - 1
+                    var x = 1
+                    for (item in produtos[userIndexProduto]) {
+                        println("Digite [$x] se você deseja mudar $item :")
+                        x += 1
+                    }
+                    val userIndexItem = readln().toInt() - 1
+                    var novoValor: Any = ""
+                    when (userIndexItem) {
+                        1 -> novoValor = readln()
+                        2 -> novoValor = readln()
+                        3 -> novoValor = readln().toDouble()
+                        4 -> novoValor = readln().toInt()
+                        5 -> novoValor = readln().toInt()
+                    }
+                    var produto = produtos[userIndexProduto]
+                    produto[userIndexItem] = novoValor
+                    produtos[userIndexProduto] = produto
                 } else  {
                     println("Nenhum produto cadastrado!")
                 }
