@@ -9,7 +9,7 @@
 
 fun main() {
     var codigoProduto = 0
-    var produtos = mutableListOf<Any>()
+    var produtos = mutableListOf<MutableList<Any>>()
 
     while(true) {
         println("[1] Cadastrar Item: ")
@@ -34,12 +34,22 @@ fun main() {
                 var quantidade = readln().toInt()
                 codigoProduto += 1
                 println("Esse é o código do produto: $codigoProduto")
-                var produto = mutableListOf(nome, descricao, preco, quantidade, codigoProduto)
+                var produto: MutableList<Any> = mutableListOf(nome, descricao, preco, quantidade, codigoProduto) // Professor, eu (Antonio) Fiz isso com ajuda da IDE, não foi IA, ok?
                 produtos.add(produto)
                 println(produtos)
             }
             2 -> {
-                println("Atualizar Item")
+                if (produtos.size != 0) {
+                    println("Qual produto você deseja atualizar?")
+                    var i = 1
+                    for (item in produtos) {
+                        println("$i -" + item[1])
+                        i += 1
+                    }
+                } else  {
+                    println("Nenhum produto cadastrado!")
+                }
+
             }
             3 -> {
                 println("Criar Pedido")
