@@ -9,10 +9,21 @@
 
 fun main() {
     var codigoProduto = 0
-    var produtos = mutableListOf<MutableList<Any>>()
+
+    data class Produto(
+        var nome: String,
+        var descricao: String,
+        var valor: Double,
+        var quantidade: Int,
+        var codigo: Int = codigoProduto
+    )
+
+    var produtos = mutableListOf<Produto>()
 
     while(true) {
-        println(produtos)
+        for (produto in produtos) {
+            println(produto)
+        }
         println("[1] Cadastrar Item: ")
         println("[2] Atualizar Item: ")
         println("[3] Criar Pedido: ")
@@ -35,7 +46,7 @@ fun main() {
                 var quantidade = readln().toInt()
                 codigoProduto += 1
                 println("Esse é o código do produto: $codigoProduto")
-                var produto: MutableList<Any> = mutableListOf(nome, descricao, preco, quantidade, codigoProduto)
+                var produto = Produto(nome, descricao, preco, quantidade)
                 produtos.add(produto)
             }
             2 -> {
@@ -43,27 +54,36 @@ fun main() {
                     println("Qual produto você deseja atualizar?")
                     var i = 1
                     for (item in produtos) {
-                        println("[$i] -" + item[0])
+                        println("[$i] -" + item.nome)
                         i += 1
                     }
                     val userIndexProduto = readln().toInt() - 1
-                    var x = 1
-                    for (item in produtos[userIndexProduto]) {
-                        println("Digite [$x] se você deseja mudar $item :")
-                        x += 1
-                    }
-                    val userIndexItem = readln().toInt() - 1
+                    var produtoAlterado = produtos[userIndexProduto]
+                    println("[1]" + produtoAlterado.nome)
+                    println("[2]" + produtoAlterado.descricao)
+                    println("[3]" + produtoAlterado.valor)
+                    println("[4]" + produtoAlterado.quantidade)
+                    print("Digite qual opção desejam mudar: ")
+
+                    val userIndexItem = readln().toInt()
                     var novoValor: Any = ""
+                    print("Digite o novo valor: ")
+                    novoValor = readln()
                     when (userIndexItem) {
-                        1 -> novoValor = readln()
-                        2 -> novoValor = readln()
-                        3 -> novoValor = readln().toDouble()
-                        4 -> novoValor = readln().toInt()
-                        5 -> novoValor = readln().toInt()
+                        1 -> {
+                            produtoAlterado.nome = novoValor
+                        }
+                        2 -> {
+                            produtoAlterado.descricao = novoValor
+                        }
+                        3 -> {
+                            produtoAlterado.valor = novoValor.toDouble()
+                        }
+                        4 -> {
+                            produtoAlterado.quantidade = novoValor.toInt()
+                        }
                     }
-                    var produto = produtos[userIndexProduto]
-                    produto[userIndexItem] = novoValor
-                    produtos[userIndexProduto] = produto
+                    produtos[userIndexProduto] = produtoAlterado
                 } else  {
                     println("Nenhum produto cadastrado!")
                 }
