@@ -108,36 +108,86 @@ fun main() {
                 println("Atualizar Pedido")
             }
             5 -> {
-                 if (pedidos.isEmpty()) {
-                    println("Nenhum pedido disponível!")
-                } else {
-                    var continuar = true
-                    while (continuar) {
-                        println("----- Submenu de Consulta de Pedidos -----")
-                        println("[1] Mostrar todos os pedidos")
-                        println("[2] Filtrar pedidos por status")
-                        println("[3] Voltar ao menu principal")
-                        print("Escolha uma opção: ")
-                        when (readln().toInt()) {
-                            1 -> pedidos.forEach { println(it) }
-                            2 -> {
-                                println("Escolha o status para filtrar:")
-                                StatusPedido.values().forEachIndexed { index, status -> println("[$index] $status") }
-                                val escolha = readln().toInt()
-                                val statusFiltro = StatusPedido.values()[escolha]
-                                val pedidosFiltrados = pedidos.filter { it.status == statusFiltro }
-                                if (pedidosFiltrados.isEmpty()) {
-                                    println("Nenhum pedido com status $statusFiltro")
-                                } else {
-                                    pedidosFiltrados.forEach { println(it) }
-                                }
-                            }
-                            3 -> continuar = false
-                            else -> println("Opção inválida! Tente novamente.")
+                 5 -> {
+    if (pedidos.size == 0) {
+        println("Nenhum pedido cadastrado!")
+    } else {
+        var continuar = true
+        while (continuar) {
+            println("----- Submenu de Consulta de Pedidos -----")
+            println("[1] Mostrar todos os pedidos")
+            println("[2] Mostrar apenas pedidos ACEITO")
+            println("[3] Mostrar apenas pedidos FAZENDO")
+            println("[4] Mostrar apenas pedidos FEITO")
+            println("[5] Mostrar apenas pedidos ESPERANDO_ENTREGADOR")
+            println("[6] Mostrar apenas pedidos SAIU_PARA_ENTREGA")
+            println("[7] Mostrar apenas pedidos ENTREGUE")
+            println("[8] Voltar ao menu principal")
+            print("Escolha uma opção: ")
+            val opcao = readln().toInt()
+            when (opcao) {
+                1 -> {
+                    println("Lista de pedidos:")
+                    for (pedido in pedidos) {
+                        println(pedido)
+                    }
+                }
+                2 -> {
+                    println("Pedidos ACEITO:")
+                    for (pedido in pedidos) {
+                        if (pedido.status == StatusPedido.ACEITO) {
+                            println(pedido)
                         }
                     }
+                }
+                3 -> {
+                    println("Pedidos FAZENDO:")
+                    for (pedido in pedidos) {
+                        if (pedido.status == StatusPedido.FAZENDO) {
+                            println(pedido)
+                        }
+                    }
+                }
+                4 -> {
+                    println("Pedidos FEITO:")
+                    for (pedido in pedidos) {
+                        if (pedido.status == StatusPedido.FEITO) {
+                            println(pedido)
+                        }
+                    }
+                }
+                5 -> {
+                    println("Pedidos ESPERANDO_ENTREGADOR:")
+                    for (pedido in pedidos) {
+                        if (pedido.status == StatusPedido.ESPERANDO_ENTREGADOR) {
+                            println(pedido)
+                        }
+                    }
+                }
+                6 -> {
+                    println("Pedidos SAIU_PARA_ENTREGA:")
+                    for (pedido in pedidos) {
+                        if (pedido.status == StatusPedido.SAIU_PARA_ENTREGA) {
+                            println(pedido)
+                        }
+                    }
+                }
+                7 -> {
+                    println("Pedidos ENTREGUE:")
+                    for (pedido in pedidos) {
+                        if (pedido.status == StatusPedido.ENTREGUE) {
+                            println(pedido)
+                        }
+                    }
+                }
+                8 -> {
+                    continuar = false // Sai do submenu
+                }
+                else -> {
+                    println("Opção inválida!")
                 }
             }
         }
     }
 }
+ 
