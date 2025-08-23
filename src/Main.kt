@@ -25,14 +25,13 @@ data class Pedido(
 
 fun main() {
 
-
     var produtos = mutableListOf<Produto>()
     val pedidos = mutableListOf<Pedido>()
     var contadorPedidos = 0
 
+    var continuarMenu = true
 
-
-    while (true) {
+    do {
         for (produto in produtos) {
             println(produto)
         }
@@ -41,10 +40,9 @@ fun main() {
         println("[3] Criar Pedido: ")
         println("[4] Atualizar Pedido: ")
         println("[5] Consultar Pedidos: ")
+        println("[6] Sair")
         print("Qual opção deseja escolher: ")
         val entrada = readln().toInt()
-
-
 
         when (entrada) {
             1 -> {
@@ -113,9 +111,9 @@ fun main() {
                     println("Criar Pedido ")
                     val itensPedido = mutableListOf<Produto>()
                     var valorTotal = 0.0
-                    var continuar = true
+                    var continuarPedido = true
 
-                    while (continuar) {
+                    do {
                         println("\nProdutos disponíveis:")
                         for ((index, produto) in produtos.withIndex()) {
                             println("[${index + 1}] ${produto.nome} - R$${produto.valor} (Estoque: ${produto.quantidade})")
@@ -126,7 +124,7 @@ fun main() {
 
                         when {
                             escolha == 0 -> { // finalizar
-                                continuar = false
+                                continuarPedido = false
                             }
 
                             escolha in 1..produtos.size -> { // adicionar produto
@@ -147,7 +145,7 @@ fun main() {
 
                             else -> println("Opção inválida!")
                         }
-                    }
+                    } while (continuarPedido)
 
                     if (itensPedido.isNotEmpty()) {
                         contadorPedidos++
@@ -197,8 +195,8 @@ fun main() {
                 if (pedidos.size == 0) {
                     println("Nenhum pedido cadastrado!")
                 } else {
-                    var continuar = true
-                    while (continuar) {
+                    var continuarConsulta = true
+                    do {
                         println("----- Submenu de Consulta de Pedidos -----")
                         println("[1] Mostrar todos os pedidos")
                         println("[2] Mostrar apenas pedidos ACEITO")
@@ -273,16 +271,20 @@ fun main() {
                             }
 
                             8 -> {
-                                continuar = false // Sai do submenu
+                                continuarConsulta = false // Sai do submenu
                             }
 
                             else -> {
                                 println("Opção inválida!")
                             }
                         }
-                    }
+                    } while (continuarConsulta)
                 }
             }
+
+            6 -> {
+                continuarMenu = false
+            }
         }
-    }
+    } while (continuarMenu)
 }
