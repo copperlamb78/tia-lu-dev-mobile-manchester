@@ -5,34 +5,34 @@
 4. Atualizar Pedido: Permite alterar o status de um pedido existente.
 5. Consultar Pedidos: Exibe informações sobre os pedidos, com a opção de filtrar por status.
 */
+var codigoProduto = 0
+data class Produto(
+    var nome: String,
+    var descricao: String,
+    var valor: Double,
+    var quantidade: Int,
+    val codigo: Int = codigoProduto
+)
+enum class StatusPedido {
+    ACEITO, FAZENDO, FEITO, ESPERANDO_ENTREGADOR, SAIU_PARA_ENTREGA, ENTREGUE
+}
+data class Pedido(
+    val id: Int,
+    val itens: MutableList<Produto>,
+    var valorTotal: Double,
+    var status: StatusPedido = StatusPedido.ACEITO
+)
 
 fun main() {
-    var codigoProduto = 0
 
-    data class Produto(
-        var nome: String,
-        var descricao: String,
-        var valor: Double,
-        var quantidade: Int,
-        var codigo: Int = codigoProduto
-    )
 
     var produtos = mutableListOf<Produto>()
-    enum class StatusPedido {
-        ACEITO, FAZENDO, FEITO, ESPERANDO_ENTREGADOR, SAIU_PARA_ENTREGA, ENTREGUE
-    }
-    data class Pedido(
-        val id: Int,
-        val itens: MutableList<Produto>,
-        var valorTotal: Double,
-        var status: StatusPedido = StatusPedido.ACEITO
-    )
     val pedidos = mutableListOf<Pedido>()
     var contadorPedidos = 0
-   
 
 
-    while(true) {
+
+    while (true) {
         for (produto in produtos) {
             println(produto)
         }
@@ -42,25 +42,26 @@ fun main() {
         println("[4] Atualizar Pedido: ")
         println("[5] Consultar Pedidos: ")
         print("Qual opção deseja escolher: ")
-        var entrada = readln().toInt()
+        val entrada = readln().toInt()
 
 
 
         when (entrada) {
             1 -> {
                 print("Qual nome do produto: ")
-                var nome = readln()
+                val nome = readln()
                 print("Descrição do produto: ")
-                var descricao = readln()
+                val descricao = readln()
                 print("Qual o preço do produto: ")
-                var preco = readln().toDouble()
+                val preco = readln().toDouble()
                 print("Quantos há em estoque: ")
-                var quantidade = readln().toInt()
+                val quantidade = readln().toInt()
                 codigoProduto += 1
                 println("Esse é o código do produto: $codigoProduto")
-                var produto = Produto(nome, descricao, preco, quantidade)
+                val produto = Produto(nome, descricao, preco, quantidade)
                 produtos.add(produto)
             }
+
             2 -> {
                 if (produtos.size != 0) {
                     println("Qual produto você deseja atualizar?")
@@ -85,28 +86,113 @@ fun main() {
                         1 -> {
                             produtoAlterado.nome = novoValor
                         }
+
                         2 -> {
                             produtoAlterado.descricao = novoValor
                         }
+
                         3 -> {
                             produtoAlterado.valor = novoValor.toDouble()
                         }
+
                         4 -> {
                             produtoAlterado.quantidade = novoValor.toInt()
                         }
                     }
                     produtos[userIndexProduto] = produtoAlterado
-                } else  {
+                } else {
                     println("Nenhum produto cadastrado!")
                 }
 
             }
-            3 -> {
-                println("Criar Pedido")
+
+            3 -> { // CRIAR PEDIDO
+                if (produtos.isEmpty()) {
+                    println("Nenhum produto disponível para pedido!")
+                } else {
+                    println("Criar Pedido ")
+                    val itensPedido = mutableListOf<Produto>()
+                    var valorTotal = 0.0
+                    var continuar = true
+
+                    while (continuar) {
+                        println("\nProdutos disponíveis:")
+                        for ((index, produto) in produtos.withIndex()) {
+                            println("[${index + 1}] ${produto.nome} - R$${produto.valor} (Estoque: ${produto.quantidade})")
+                        }
+                        println("[0] Finalizar pedido")
+                        print("Escolha um produto pelo número: ")
+                        val escolha = readln().toInt()
+
+                        when {
+                            escolha == 0 -> { // finalizar
+                                continuar = false
+                            }
+
+                            escolha in 1..produtos.size -> { // adicionar produto
+                                val produtoEscolhido = produtos[escolha - 1]
+                                print("Quantos deseja adicionar ao pedido? ")
+                                val qtd = readln().toInt()
+
+                                if (qtd <= produtoEscolhido.quantidade) {
+                                    val produtoPedido = produtoEscolhido.copy(quantidade = qtd)
+                                    itensPedido.add(produtoPedido)
+                                    valorTotal += produtoPedido.valor * qtd
+                                    produtoEscolhido.quantidade -= qtd
+                                    println("${qtd}x ${produtoEscolhido.nome} adicionado ao pedido!")
+                                } else {
+                                    println("Estoque insuficiente!")
+                                }
+                            }
+
+                            else -> println("Opção inválida!")
+                        }
+                    }
+
+                    if (itensPedido.isNotEmpty()) {
+                        contadorPedidos++
+                        val pedido = Pedido(contadorPedidos, itensPedido, valorTotal)
+                        pedidos.add(pedido)
+                        println("Pedido criado com sucesso! ID: ${pedido.id}, Valor total: R$${pedido.valorTotal}")
+                    } else {
+                        println("Nenhum item foi adicionado ao pedido.")
+                    }
+                }
             }
-            4 -> {
-                println("Atualizar Pedido")
+
+            4 -> { // ATUALIZAR PEDIDO
+                if (pedidos.isEmpty()) {
+                    println("Nenhum pedido para atualizar!")
+                } else {
+                    println("Atualizar Pedido")
+                    for (pedido in pedidos) {
+                        println("Pedido ${pedido.id} - Status: ${pedido.status}")
+                    }
+                    print("Digite o ID do pedido que deseja atualizar: ")
+                    val idPedido = readln().toInt()
+                    val pedidoSelecionado = pedidos.find { it.id == idPedido }
+
+                    if (pedidoSelecionado != null) {
+                        println("Escolha o novo status:")
+                        for ((index, status) in StatusPedido.values().withIndex()) {
+                            println("[${index + 1}] $status")
+                        }
+                        val novoStatus = readln().toInt()
+
+                        when (novoStatus) {
+                            in 1..StatusPedido.values().size -> {
+                                pedidoSelecionado.status = StatusPedido.values()[novoStatus - 1]
+                                println("Status atualizado com sucesso para ${pedidoSelecionado.status}")
+                            }
+
+                            else -> println("Opção inválida!")
+                        }
+                    } else {
+                        println("Pedido não encontrado!")
+                    }
+                }
             }
+
             5 -> {
                 if (pedidos.size == 0) {
                     println("Nenhum pedido cadastrado!")
@@ -131,6 +217,7 @@ fun main() {
                                     println(pedido)
                                 }
                             }
+
                             2 -> {
                                 println("Pedidos ACEITO:")
                                 for (pedido in pedidos) {
@@ -139,6 +226,7 @@ fun main() {
                                     }
                                 }
                             }
+
                             3 -> {
                                 println("Pedidos FAZENDO:")
                                 for (pedido in pedidos) {
@@ -147,6 +235,7 @@ fun main() {
                                     }
                                 }
                             }
+
                             4 -> {
                                 println("Pedidos FEITO:")
                                 for (pedido in pedidos) {
@@ -155,6 +244,7 @@ fun main() {
                                     }
                                 }
                             }
+
                             5 -> {
                                 println("Pedidos ESPERANDO_ENTREGADOR:")
                                 for (pedido in pedidos) {
@@ -163,6 +253,7 @@ fun main() {
                                     }
                                 }
                             }
+
                             6 -> {
                                 println("Pedidos SAIU_PARA_ENTREGA:")
                                 for (pedido in pedidos) {
@@ -171,6 +262,7 @@ fun main() {
                                     }
                                 }
                             }
+
                             7 -> {
                                 println("Pedidos ENTREGUE:")
                                 for (pedido in pedidos) {
@@ -179,14 +271,18 @@ fun main() {
                                     }
                                 }
                             }
+
                             8 -> {
                                 continuar = false // Sai do submenu
                             }
+
                             else -> {
                                 println("Opção inválida!")
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
- 
