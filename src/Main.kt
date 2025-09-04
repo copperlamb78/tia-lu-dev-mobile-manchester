@@ -69,10 +69,10 @@ fun main() {
                     }
                     val userIndexProduto = readln().toInt() - 1
                     var produtoAlterado = produtos[userIndexProduto] //Aqui atribuimos o produto que queremos alterar a uma variavel
-                    println("[1]" + produtoAlterado.nome)
-                    println("[2]" + produtoAlterado.descricao)
-                    println("[3]" + produtoAlterado.valor)
-                    println("[4]" + produtoAlterado.quantidade)
+                    println("[1] Nome - " + produtoAlterado.nome)
+                    println("[2] Descrição - " + produtoAlterado.descricao)
+                    println("[3] Valor - " + "R$" + produtoAlterado.valor)
+                    println("[4] Quantidade - " + produtoAlterado.quantidade)
                     print("Digite qual opção desejam mudar: ")
 
                     val userIndexItem = readln().toInt()
