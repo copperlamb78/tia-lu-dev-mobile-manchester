@@ -5,23 +5,6 @@
 4. Atualizar Pedido: Permite alterar o status de um pedido existente.
 5. Consultar Pedidos: Exibe informações sobre os pedidos, com a opção de filtrar por status.
 */
-var codigoProduto = 0
-data class Produto( //Classe do produto
-    var nome: String,
-    var descricao: String,
-    var valor: Double,
-    var quantidade: Int,
-    val codigo: Int = codigoProduto
-)
-enum class StatusPedido { // Clase para status do pedido
-    ACEITO, FAZENDO, FEITO, ESPERANDO_ENTREGADOR, SAIU_PARA_ENTREGA, ENTREGUE
-}
-data class Pedido( // Classe para pedidos
-    val id: Int,
-    val itens: MutableList<Produto>,
-    var valorTotal: Double,
-    var status: StatusPedido = StatusPedido.ACEITO
-)
 
 fun main() {
 
@@ -106,8 +89,8 @@ fun main() {
                     do {
                         println("\nProdutos disponíveis:")
                         produtos.forEachIndexed {
-                            index,
-                            produto -> println("[${index + 1}] ${produto.nome} - R$${produto.valor} (Estoque: ${produto.quantidade})")
+                                index,
+                                produto -> println("[${index + 1}] ${produto.nome} - R$${produto.valor} (Estoque: ${produto.quantidade})")
                         }
                         println("[0] Finalizar pedido")
                         print("Escolha um produto pelo número: ")
@@ -175,8 +158,8 @@ fun main() {
                     if (pedidoSelecionado != null) {
                         println("Escolha o novo status:")
                         StatusPedido.entries.forEachIndexed {
-                            index,
-                            status -> println("[${index + 1}] $status")
+                                index,
+                                status -> println("[${index + 1}] $status")
                         }
 
 
@@ -184,7 +167,7 @@ fun main() {
                             in 1..StatusPedido.entries.size -> {
                                 atualizarPedido(pedidoSelecionado, novoStatus)
                                 println("Status atualizado com sucesso para ${pedidoSelecionado.status}")
-                        }
+                            }
 
                             else -> println("Opção inválida!")
                         }

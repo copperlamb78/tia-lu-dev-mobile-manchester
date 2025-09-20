@@ -1,5 +1,26 @@
+var codigoProduto = 0
+
 val produtos = mutableListOf<Produto>() //Lista de produtos
 val pedidos = mutableListOf<Pedido>() // Lista de pedidos
+
+data class Produto( //Classe do produto
+    var nome: String,
+    var descricao: String,
+    var valor: Double,
+    var quantidade: Int,
+    val codigo: Int = codigoProduto
+)
+
+enum class StatusPedido { // Clase para status do pedido
+    ACEITO, FAZENDO, FEITO, ESPERANDO_ENTREGADOR, SAIU_PARA_ENTREGA, ENTREGUE
+}
+
+data class Pedido( // Classe para pedidos
+    val id: Int,
+    val itens: MutableList<Produto>,
+    var valorTotal: Double,
+    var status: StatusPedido = StatusPedido.ACEITO
+)
 
 fun cadastrarItem (nome: String, descricao: String, preco: Double, quantidade: Int) {
     codigoProduto += 1
@@ -42,7 +63,7 @@ fun criarPedido (contadorPedidos: Int, itensPedido: MutableList<Produto>, valorT
 }
 
 fun atualizarPedido (pedidoSelecionado: Pedido, novoStatus: Int) {
-        pedidoSelecionado.status = StatusPedido.entries[novoStatus - 1]
+    pedidoSelecionado.status = StatusPedido.entries[novoStatus - 1]
 }
 
 fun consultarPedidosPorStatus(status: StatusPedido): List<Pedido> =
