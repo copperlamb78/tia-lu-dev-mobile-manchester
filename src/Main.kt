@@ -16,7 +16,7 @@ data class Produto( //Classe do produto
 enum class StatusPedido { // Clase para status do pedido
     ACEITO, FAZENDO, FEITO, ESPERANDO_ENTREGADOR, SAIU_PARA_ENTREGA, ENTREGUE
 }
-data class Pedido( // Classe para pedido
+data class Pedido( // Classe para pedidos
     val id: Int,
     val itens: MutableList<Produto>,
     var valorTotal: Double,
@@ -60,7 +60,7 @@ fun main() {
             }
 
             2 -> { // Atualizar item
-                if (produtos.size != 0) {
+                if (produtos.isNotEmpty()) {
                     println("Qual produto você deseja atualizar?")
                     var i = 1
                     for (item in produtos) { // Mostra o nome dos produtos com o id (Para facilitar intereção com usuário)
@@ -68,7 +68,7 @@ fun main() {
                         i += 1
                     }
                     val userIndexProduto = readln().toInt() - 1
-                    var produtoAlterado = produtos[userIndexProduto] //Aqui atribuimos o produto que queremos alterar a uma variavel
+                    val produtoAlterado = produtos[userIndexProduto] //Aqui atribuimos o produto que queremos alterar a uma variavel
                     println("[1] Nome - " + produtoAlterado.nome)
                     println("[2] Descrição - " + produtoAlterado.descricao)
                     println("[3] Valor - " + "R$" + produtoAlterado.valor)
@@ -76,9 +76,8 @@ fun main() {
                     print("Digite qual opção desejam mudar: ")
 
                     val userIndexItem = readln().toInt()
-                    var novoValor: Any = ""
                     print("Digite o novo valor: ")
-                    novoValor = readln()
+                    val novoValor = readln()
                     when (userIndexItem) { // Aqui alteramos o valor da caracteristica do produto com seus respectivos tipos
                         1 -> {
                             produtoAlterado.nome = novoValor
@@ -120,19 +119,19 @@ fun main() {
 
                     do {
                         println("\nProdutos disponíveis:")
-                        for ((index, produto) in produtos.withIndex()) { //Lista os produtos disponíveis
-                            println("[${index + 1}] ${produto.nome} - R$${produto.valor} (Estoque: ${produto.quantidade})")
+                        produtos.forEachIndexed {
+                            index,
+                            produto -> println("[${index + 1}] ${produto.nome} - R$${produto.valor} (Estoque: ${produto.quantidade})")
                         }
                         println("[0] Finalizar pedido")
                         print("Escolha um produto pelo número: ")
-                        val escolha = readln().toInt()
 
-                        when {
-                            escolha == 0 -> { // finalizar
+
+                        when (val escolha = readln().toInt()) {
+                            0 -> { // finalizar
                                 continuarPedido = false
                             }
-
-                            escolha in 1..produtos.size -> { // adicionar produto
+                            in 1..produtos.size -> { // adicionar produto
                                 val produtoEscolhido = produtos[escolha - 1]
                                 print("Quantos deseja adicionar ao pedido? ")
                                 val qtd = readln().toInt()
@@ -147,7 +146,6 @@ fun main() {
                                     println("Estoque insuficiente!")
                                 }
                             }
-
                             else -> println("Opção inválida!")
                         }
                     } while (continuarPedido)
@@ -162,7 +160,7 @@ fun main() {
                                 when (entradaDesconto) {
                                     1 -> { //Aqui ele vai alterar o valortotal e mostrará o valor antigo e o alterado
                                         print("Valor anterior: ${valorTotal}, Valor com desconto: ")
-                                        valorTotal = valorTotal - (valorTotal * desconto)
+                                        valorTotal -= (valorTotal * desconto)
                                         println(valorTotal)
                                     }
 
@@ -196,14 +194,15 @@ fun main() {
 
                     if (pedidoSelecionado != null) {
                         println("Escolha o novo status:")
-                        for ((index, status) in StatusPedido.values().withIndex()) {
-                            println("[${index + 1}] $status")
+                        StatusPedido.entries.forEachIndexed {
+                            index,
+                            status -> println("[${index + 1}] $status")
                         }
-                        val novoStatus = readln().toInt()
 
-                        when (novoStatus) {
-                            in 1..StatusPedido.values().size -> {
-                                pedidoSelecionado.status = StatusPedido.values()[novoStatus - 1]
+
+                        when (val novoStatus = readln().toInt()) {
+                            in 1..StatusPedido.entries.size -> {
+                                pedidoSelecionado.status = StatusPedido.entries[novoStatus - 1]
                                 println("Status atualizado com sucesso para ${pedidoSelecionado.status}")
                             }
 
@@ -216,7 +215,7 @@ fun main() {
             }
 
             6 -> { //Consultar pedido
-                if (pedidos.size == 0) {
+                if (pedidos.isEmpty()) {
                     println("Nenhum pedido cadastrado!")
                 } else {
                     var continuarConsulta = true
@@ -235,63 +234,43 @@ fun main() {
                         when (opcao) {
                             1 -> {
                                 println("Lista de pedidos:")
-                                for (pedido in pedidos) {
-                                    println(pedido)
-                                }
+                                pedidos.forEach { pedido -> println(pedido) }
                             }
 
                             2 -> {
                                 println("Pedidos ACEITO:")
-                                for (pedido in pedidos) {
-                                    if (pedido.status == StatusPedido.ACEITO) {
-                                        println(pedido)
-                                    }
-                                }
+                                pedidos.filter { it.status == StatusPedido.ACEITO }
+                                    .forEach { println(it) }
                             }
 
                             3 -> {
                                 println("Pedidos FAZENDO:")
-                                for (pedido in pedidos) {
-                                    if (pedido.status == StatusPedido.FAZENDO) {
-                                        println(pedido)
-                                    }
-                                }
+                                pedidos.filter { it.status == StatusPedido.FAZENDO }
+                                    .forEach { println(it) }
                             }
 
                             4 -> {
                                 println("Pedidos FEITO:")
-                                for (pedido in pedidos) {
-                                    if (pedido.status == StatusPedido.FEITO) {
-                                        println(pedido)
-                                    }
-                                }
+                                pedidos.filter { it.status == StatusPedido.FEITO }
+                                    .forEach { println(it) }
                             }
 
                             5 -> {
                                 println("Pedidos ESPERANDO_ENTREGADOR:")
-                                for (pedido in pedidos) {
-                                    if (pedido.status == StatusPedido.ESPERANDO_ENTREGADOR) {
-                                        println(pedido)
-                                    }
-                                }
+                                    pedidos.filter { it.status == StatusPedido.ESPERANDO_ENTREGADOR }
+                                        .forEach { println(it) }
                             }
 
                             6 -> {
                                 println("Pedidos SAIU_PARA_ENTREGA:")
-                                for (pedido in pedidos) {
-                                    if (pedido.status == StatusPedido.SAIU_PARA_ENTREGA) {
-                                        println(pedido)
-                                    }
-                                }
+                                pedidos.filter { it.status == StatusPedido.SAIU_PARA_ENTREGA }
+                                    .forEach { println(it) }
                             }
 
                             7 -> {
                                 println("Pedidos ENTREGUE:")
-                                for (pedido in pedidos) {
-                                    if (pedido.status == StatusPedido.ENTREGUE) {
-                                        println(pedido)
-                                    }
-                                }
+                                pedidos.filter { it.status == StatusPedido.ENTREGUE }
+                                    .forEach { println(it) }
                             }
 
                             8 -> {
