@@ -63,7 +63,7 @@ fun main() {
                     produtos.forEachIndexed { index, produto ->
                         println("[$index] - ${produto.nome}")
                     }
-                    val userIndexProduto = readln().toInt() - 1
+                    val userIndexProduto = readln().toInt()
                     val produtoAlterado = produtos[userIndexProduto] //Aqui atribuimos o produto que queremos alterar a uma variavel
                     println("[1] Nome - " + produtoAlterado.nome)
                     println("[2] Descrição - " + produtoAlterado.descricao)
@@ -88,7 +88,8 @@ fun main() {
                             "Nome: ${produto.nome} \n" +
                             "Descrição: ${produto.descricao} \n" +
                             "Preço: ${produto.valor} \n" +
-                            "Estoque: ${produto.quantidade}"
+                            "Estoque: ${produto.quantidade} \n" +
+                            ""
                     )
                 }
             }

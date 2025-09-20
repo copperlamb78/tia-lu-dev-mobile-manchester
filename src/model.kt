@@ -31,8 +31,8 @@ fun atualizarItem (userIndexItem: Int, produtoAlterado: Produto, novoValor: Stri
 fun adicionarProdutoAoPedido(produtoEscolhido: Produto, itensPedido: MutableList<Produto>, valorTotal: Double, qtd: Int): Double {
     val produtoPedido = produtoEscolhido.copy(quantidade = qtd)
     itensPedido.add(produtoPedido)
-    return valorTotal + (produtoPedido.valor * qtd)
     produtoEscolhido.quantidade -= qtd
+    return valorTotal + (produtoPedido.valor * qtd)
 }
 
 fun criarPedido (contadorPedidos: Int, itensPedido: MutableList<Produto>, valorTotal: Double) : Pedido {
