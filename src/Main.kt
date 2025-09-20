@@ -26,8 +26,8 @@ data class Pedido( // Classe para pedidos
 fun main() {
 
     val desconto = 0.12 // 12% de desconto
-    val produtos = mutableListOf<Produto>() //Lista de produtos
-    val pedidos = mutableListOf<Pedido>() // Lista de pedidos
+
+
     var contadorPedidos = 0
 
     var continuarMenu = true //Variável para finalizar loop
@@ -53,19 +53,15 @@ fun main() {
                 val preco = readln().toDouble()
                 print("Quantos há em estoque: ")
                 val quantidade = readln().toInt()
-                codigoProduto += 1
+                cadastrarItem(nome, descricao, preco, quantidade)
                 println("Esse é o código do produto: $codigoProduto")
-                val produto = Produto(nome, descricao, preco, quantidade) //adiciona O produto a lista de produtos
-                produtos.add(produto)
             }
 
             2 -> { // Atualizar item
                 if (produtos.isNotEmpty()) {
                     println("Qual produto você deseja atualizar?")
-                    var i = 1
-                    for (item in produtos) { // Mostra o nome dos produtos com o id (Para facilitar intereção com usuário)
-                        println("[$i] -" + item.nome)
-                        i += 1
+                    produtos.forEachIndexed { index, produto ->
+                        println("[$index] - ${produto.nome}")
                     }
                     val userIndexProduto = readln().toInt() - 1
                     val produtoAlterado = produtos[userIndexProduto] //Aqui atribuimos o produto que queremos alterar a uma variavel
@@ -73,29 +69,12 @@ fun main() {
                     println("[2] Descrição - " + produtoAlterado.descricao)
                     println("[3] Valor - " + "R$" + produtoAlterado.valor)
                     println("[4] Quantidade - " + produtoAlterado.quantidade)
-                    print("Digite qual opção desejam mudar: ")
+                    println("Digite qual opção desejam mudar: ")
 
                     val userIndexItem = readln().toInt()
-                    print("Digite o novo valor: ")
+                    println("Digite o novo valor: ")
                     val novoValor = readln()
-                    when (userIndexItem) { // Aqui alteramos o valor da caracteristica do produto com seus respectivos tipos
-                        1 -> {
-                            produtoAlterado.nome = novoValor
-                        }
-
-                        2 -> {
-                            produtoAlterado.descricao = novoValor
-                        }
-
-                        3 -> {
-                            produtoAlterado.valor = novoValor.toDouble()
-                        }
-
-                        4 -> {
-                            produtoAlterado.quantidade = novoValor.toInt()
-                        }
-                    }
-                    produtos[userIndexProduto] = produtoAlterado //trocamos o produto antigo pelo o produto alterado
+                    atualizarItem(userIndexItem, produtoAlterado, novoValor, userIndexProduto)
                 } else {
                     println("Nenhum produto cadastrado!")
                 }
@@ -103,9 +82,7 @@ fun main() {
             }
 
             3 -> { // Consultar pedido
-                for (produto in produtos) {
-                    println(produto)
-                }
+                consultarItem()
             }
 
             4 -> { // CRIAR PEDIDO
@@ -125,8 +102,6 @@ fun main() {
                         }
                         println("[0] Finalizar pedido")
                         print("Escolha um produto pelo número: ")
-
-
                         when (val escolha = readln().toInt()) {
                             0 -> { // finalizar
                                 continuarPedido = false
@@ -137,10 +112,7 @@ fun main() {
                                 val qtd = readln().toInt()
 
                                 if (qtd <= produtoEscolhido.quantidade) {
-                                    val produtoPedido = produtoEscolhido.copy(quantidade = qtd)
-                                    itensPedido.add(produtoPedido)
-                                    valorTotal += produtoPedido.valor * qtd
-                                    produtoEscolhido.quantidade -= qtd
+                                    valorTotal = adicionarProdutoAoPedido(produtoEscolhido, itensPedido, valorTotal, qtd)
                                     println("${qtd}x ${produtoEscolhido.nome} adicionado ao pedido!")
                                 } else {
                                     println("Estoque insuficiente!")
@@ -171,8 +143,7 @@ fun main() {
                             } while (entradaDesconto != 1 && entradaDesconto != 2)
 
                         }
-                        val pedido = Pedido(contadorPedidos, itensPedido, valorTotal)
-                        pedidos.add(pedido)
+                        val pedido = criarPedido(contadorPedidos, itensPedido, valorTotal)
                         println("Pedido criado com sucesso! ID: ${pedido.id}, Valor total pago: R$${pedido.valorTotal}")
                     } else {
                         println("Nenhum item foi adicionado ao pedido. Para criar pedido é necessário adicionar um item pelo menos")
@@ -202,9 +173,9 @@ fun main() {
 
                         when (val novoStatus = readln().toInt()) {
                             in 1..StatusPedido.entries.size -> {
-                                pedidoSelecionado.status = StatusPedido.entries[novoStatus - 1]
+                                atualizarPedido(pedidoSelecionado, novoStatus)
                                 println("Status atualizado com sucesso para ${pedidoSelecionado.status}")
-                            }
+                        }
 
                             else -> println("Opção inválida!")
                         }
