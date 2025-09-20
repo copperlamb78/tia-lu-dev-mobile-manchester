@@ -82,7 +82,15 @@ fun main() {
             }
 
             3 -> { // Consultar pedido
-                consultarItem()
+                produtos.forEach { produto ->
+                    println("Produto: \n" +
+                            "Código: ${produto.codigo} \n" +
+                            "Nome: ${produto.nome} \n" +
+                            "Descrição: ${produto.descricao} \n" +
+                            "Preço: ${produto.valor} \n" +
+                            "Estoque: ${produto.quantidade}"
+                    )
+                }
             }
 
             4 -> { // CRIAR PEDIDO
@@ -210,38 +218,32 @@ fun main() {
 
                             2 -> {
                                 println("Pedidos ACEITO:")
-                                pedidos.filter { it.status == StatusPedido.ACEITO }
-                                    .forEach { println(it) }
+                                consultarPedidosPorStatus(StatusPedido.ACEITO).forEach { println(it) }
                             }
 
                             3 -> {
                                 println("Pedidos FAZENDO:")
-                                pedidos.filter { it.status == StatusPedido.FAZENDO }
-                                    .forEach { println(it) }
+                                consultarPedidosPorStatus(StatusPedido.FAZENDO).forEach { println(it) }
                             }
 
                             4 -> {
                                 println("Pedidos FEITO:")
-                                pedidos.filter { it.status == StatusPedido.FEITO }
-                                    .forEach { println(it) }
+                                consultarPedidosPorStatus(StatusPedido.FEITO).forEach { println(it) }
                             }
 
                             5 -> {
                                 println("Pedidos ESPERANDO_ENTREGADOR:")
-                                    pedidos.filter { it.status == StatusPedido.ESPERANDO_ENTREGADOR }
-                                        .forEach { println(it) }
+                                consultarPedidosPorStatus(StatusPedido.ESPERANDO_ENTREGADOR).forEach { println(it) }
                             }
 
                             6 -> {
                                 println("Pedidos SAIU_PARA_ENTREGA:")
-                                pedidos.filter { it.status == StatusPedido.SAIU_PARA_ENTREGA }
-                                    .forEach { println(it) }
+                                consultarPedidosPorStatus(StatusPedido.SAIU_PARA_ENTREGA).forEach { println(it) }
                             }
 
                             7 -> {
                                 println("Pedidos ENTREGUE:")
-                                pedidos.filter { it.status == StatusPedido.ENTREGUE }
-                                    .forEach { println(it) }
+                                consultarPedidosPorStatus(StatusPedido.ENTREGUE).forEach { println(it) }
                             }
 
                             8 -> {

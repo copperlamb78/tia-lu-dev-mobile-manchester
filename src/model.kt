@@ -28,18 +28,6 @@ fun atualizarItem (userIndexItem: Int, produtoAlterado: Produto, novoValor: Stri
     produtos[userIndexProduto] = produtoAlterado //trocamos o produto antigo pelo o produto alterado
 }
 
-fun consultarItem () {
-    produtos.forEach { produto ->
-        println("Produto: \n" +
-                "Código: ${produto.codigo} \n" +
-                "Nome: ${produto.nome} \n" +
-                "Descrição: ${produto.descricao} \n" +
-                "Preço: ${produto.valor} \n" +
-                "Estoque: ${produto.quantidade}"
-        )
-    }
-}
-
 fun adicionarProdutoAoPedido(produtoEscolhido: Produto, itensPedido: MutableList<Produto>, valorTotal: Double, qtd: Int): Double {
     val produtoPedido = produtoEscolhido.copy(quantidade = qtd)
     itensPedido.add(produtoPedido)
@@ -56,3 +44,6 @@ fun criarPedido (contadorPedidos: Int, itensPedido: MutableList<Produto>, valorT
 fun atualizarPedido (pedidoSelecionado: Pedido, novoStatus: Int) {
         pedidoSelecionado.status = StatusPedido.entries[novoStatus - 1]
 }
+
+fun consultarPedidosPorStatus(status: StatusPedido): List<Pedido> =
+    pedidos.filter { it.status == status }
